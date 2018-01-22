@@ -22,33 +22,46 @@ namespace SubTask2
             {'9',9 },
         };
 
-        public int Convert(string inputString) {
+        public int Convert(string inputString)
+        {
             if (String.IsNullOrEmpty(inputString))
                 throw new ArgumentNullException(inputString, "Empty string for convert");
+            var sign = 1;
+            if (inputString[0] == '-')
+            {
+                sign = -1;
+                inputString = inputString.Remove(0, 1);
+            }
 
             char[] inputChars = inputString.ToCharArray().Reverse().ToArray();
             var result = 0;
             var discharge = 0;
             foreach (char item in inputChars)
             {
-                try
+                if (discharge == 0)
                 {
-                    if (discharge == 0)
-                    {
-                        result += _numbersDictionary[item];
-                        discharge = 1;
-                    }
-                    else
-                    {
-                        result += _numbersDictionary[item] * discharge;
-                    }
+                    result += _numbersDictionary[item];
+                    discharge = 1;
                 }
-                catch {
-                    throw new ArgumentException("Finded symbol different than number");
+                else
+                {
+                    if (!_numbersDictionary.ContainsKey(item))
+                        throw new ArgumentException("Found not supported symbol");
+                    try
+                    {
+                        checked
+                        {
+                            result += _numbersDictionary[item] * discharge;
+                        }
+                    }
+                    catch 
+                    {
+                        throw new ArgumentOutOfRangeException("The value is out of range");
+                    }
                 }
                 discharge *= 10;
             }
-            return result;
+            return result *= sign;
         }
     }
 }
