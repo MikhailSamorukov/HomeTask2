@@ -24,7 +24,7 @@ namespace SubTask2
 
         public int Convert(string inputString)
         {
-            if (String.IsNullOrEmpty(inputString))
+            if (String.IsNullOrEmpty(inputString) || inputString == "-")
                 throw new ArgumentNullException(inputString, "Empty string for convert");
             var sign = 1;
             if (inputString[0] == '-')
